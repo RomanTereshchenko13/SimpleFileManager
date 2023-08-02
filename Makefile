@@ -3,28 +3,30 @@ CC := g++
 CFLAGS := -Wall -Wextra -std=c++17 -Iinclude
 
 # Directories
-SRC_DIR := src
-BUILD_DIR := build
+SRCDIR = src
+INCDIR = include
+BUILDDIR = build
 
-# Source files
-SRCS := $(wildcard $(SRC_DIR)/*.cpp)
-OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
-EXECUTABLE := $(BUILD_DIR)/file_manager
+# Source, header, and object files
+SOURCES = $(wildcard $(SRCDIR)/*.cpp)
+HEADERS = $(wildcard $(INCDIR)/*.h)
+OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))
 
-# Targets
-all: $(EXECUTABLE)
+# Binary name
+TARGET = file_manager
 
-$(EXECUTABLE): $(BUILD_DIR)/main.o $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+# Rules
+all: $(TARGET)
 
-$(BUILD_DIR)/main.o: $(SRC_DIR)/main.cpp | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILDDIR)
