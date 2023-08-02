@@ -1,7 +1,6 @@
 #ifndef FILE_SEARCHER_H
 #define FILE_SEARCHER_H
 
-#include"pch.h"
 #include"file_system.h"
 
 class file_searcher 

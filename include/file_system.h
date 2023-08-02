@@ -1,8 +1,6 @@
 #ifndef FILE_SYSTEM_H
 #define FILE_SYSTEM_H
 
-#include"pch.h"
-
 class file_system
 {
 public:

@@ -7,6 +7,10 @@ SRCDIR = src
 INCDIR = include
 BUILDDIR = build
 
+# Precompiled header
+PCH = $(INCDIR)/pch.h
+PCH_FLAGS = -include $(PCH)
+
 # Source, header, and object files
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 HEADERS = $(wildcard $(INCDIR)/*.h)
@@ -18,15 +22,18 @@ TARGET = file_manager
 # Rules
 all: $(TARGET)
 
+# Make main target (executable)
 $(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(PCH_FLAGS) -o $@ $(OBJECTS)
 
+# Build object files
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(PCH_FLAGS) -I$(INCDIR) -c $< -o $@
 
+#Create build directory
 $(BUILDDIR):
 	mkdir -p $(BUILDDIR)
 
 clean:
-	rm -rf $(BUILDDIR)
+	rm -rf $(BUILDDIR) $(TARGET)

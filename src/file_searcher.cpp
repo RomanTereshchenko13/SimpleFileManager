@@ -1,3 +1,4 @@
+#include"pch.h"
 #include "file_searcher.h"
 
 void file_searcher::start_search(std::string_view file_name)

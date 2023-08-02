@@ -1,3 +1,4 @@
+#include"pch.h"
 #include"file_manager.h"
 
 void file_manager::make_dir(std::string& command) {
@@ -7,7 +8,7 @@ void file_manager::make_dir(std::string& command) {
 }
 
 void file_manager::remove_dir(const string& command) {
-	fs::path path(m_file_system_ptr->get_current_path().string() + command);
+	fs::path path(m_file_system_ptr->get_current_path() / command);
 	if (fs::is_directory(path)) {
 		try {
 			fs::remove(path);
@@ -21,8 +22,9 @@ void file_manager::remove_dir(const string& command) {
 }
 
 void file_manager::remove(const std::string& command) {
-	if (fs::remove_all(m_file_system_ptr->get_current_path().string() + command)) {
-		if (fs::is_directory(m_file_system_ptr->get_current_path().string() + command))
+	fs::path path(m_file_system_ptr->get_current_path() / command);
+	if (fs::remove_all(path)) {
+		if (fs::is_directory(path))
 			cout << "Directory " << command << " removed" << endl;
 		else cout << "File " << command << " removed" << endl;
 	}
