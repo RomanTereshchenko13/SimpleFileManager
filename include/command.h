@@ -42,7 +42,6 @@ private:
 };
 
 /*FileManager Commands*/
-
 class list_command : public command
 {
 public:
@@ -169,7 +168,6 @@ public:
 private:
 	std::shared_ptr<file_manager> fileManagerPtr;
 };
-
 
 class search_command : public command
 {

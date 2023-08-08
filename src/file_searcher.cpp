@@ -44,6 +44,7 @@ bool file_searcher::search_file(const fs::path& path, std::string_view file_name
             {
                 found = true;
             }
+            
             std::cout << "Full path to the file: " << entry.path().string() << std::endl;
         }
         if(found) return true;

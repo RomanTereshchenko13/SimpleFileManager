@@ -2,9 +2,16 @@
 #include"file_manager.h"
 
 void file_manager::make_dir(std::string& command) {
-	if (fs::create_directory(m_file_system_ptr->get_current_path() / command))
-		cout << "Directory " << command << " created" << endl;
-	else cout << "Directory " << command << " already exist" << endl;
+	try
+	{
+		if (fs::create_directory(m_file_system_ptr->get_current_path() / command))
+			cout << "Directory " << command << " created" << endl;
+		else cout << "Directory " << command << " already exist" << endl;
+	}
+    catch (const fs::filesystem_error& ex)
+    {
+        std::cerr << "Error occurred: " << ex.what() << std::endl;
+    }
 }
 
 void file_manager::remove_dir(const string& command) {
@@ -31,17 +38,23 @@ void file_manager::remove(const std::string& command) {
 	else cout << "Can`t find directory with name" << command << endl;
 }
 
+//move to different directory or rename
 void file_manager::move(string& command) {
+
 	std::vector<string> paths;
-	string temp = command;
-	string s;
+
+	std::string s;
 	const char delim = ' ';
-	std::stringstream ss(temp);
+	std::stringstream ss(command);
+
 	while (getline(ss, s, delim))
 		paths.push_back(s);
+
 	if (paths.size() == 2) {
+
 		fs::rename(m_file_system_ptr->get_current_path() / paths[0], m_file_system_ptr->get_current_path() / paths[1]);
 	}
+ 
 	else cout << "Please enter second name or path" << endl;
 }
 
@@ -78,27 +91,54 @@ void file_manager::create_file(std::string& command)
 	}
 }
 
-void file_manager::read_from_file(std::string& command) {
+//read file content line by line
+void file_manager::read_from_file(std::string& command) 
+{
 	m_file_path = m_file_system_ptr->get_current_path() / command;
-	string line;
-	std::fstream file(m_file_path, std::ios::in);
+
+	std::ifstream file(m_file_path, std::ios::in);
+
 	if (!file.is_open())
-		cout << "Failed to open " << m_file_path;
-	getline(file, line);
-	cout << line << endl;
+	{
+		std::cerr << "Failed to open " << m_file_path << std::endl;
+	}
+
+	std::string line;
+
+	while(std::getline(file, line))
+	{
+		std::cout << line << std::endl;
+	}
+
+	file.close();
+
 }
 
-void file_manager::write_to_file(std::string& command) {
+//create file and write to it. if file already exist appends new content to already existed
+void file_manager::write_to_file(std::string& command) 
+{
 	m_file_path = m_file_system_ptr->get_current_path() / command;
-	string line;
-	std::fstream file(m_file_path, std::ios::out | std::ios::trunc);
-	if (!file.is_open())
-		cout << "Failed to open " << m_file_path;
 
-	cout << "Please write your text: " << endl;
-	do {
-		getline(cin, line);
-		file << line;
-	} while (line != "q");
+	std::ofstream file(m_file_path, std::ios::out | std::ios::app);
+
+	if (!file.is_open())
+	{
+		std::cerr << "Failed to open " << m_file_path << std::endl;
+		return;
+	}
+
+	cout << "Please write your text (type 'exit' to finish): " << endl;
+
+	std::string input;
+	while(true) 
+	{
+		std::getline(std::cin, input);
+
+		if(input == "exit")
+			break;
+
+		file << input << std::endl;
+	} 
+
 	file.close();
 }
