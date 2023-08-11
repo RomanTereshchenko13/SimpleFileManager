@@ -1,12 +1,18 @@
 #include"pch.h"
 #include "command.h"
 #include"color.h"
+#include<conio.h>
 
 using system_ptr = std::shared_ptr<file_system>;
 using manager_ptr = std::shared_ptr<file_manager>;
 using searcher_ptr = std::shared_ptr<file_searcher>;
 using command_ptr = std::unique_ptr<command>;
 using commands_map = std::unordered_map<std::string_view, command_ptr>;  
+
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
 
 //commands initialization
 commands_map initialize_commands(system_ptr& system, manager_ptr& manager, searcher_ptr& searcher)
@@ -35,6 +41,8 @@ void run_file_manager(const commands_map& commands, const system_ptr& file_syste
     {
         cout << COLOR::Yellow << file_system_ptr->get_current_path().string() << "> " << COLOR::Reset;
         getline(std::cin, command_name);
+        if(command_name == "\x1b[A")
+            std::cout << "Up arrow key pressed" << std::endl;
         auto it = commands.find(command_name.substr(0, command_name.find(' ')));
         if (it != commands.end()) {
             it->second->execute(command_name.substr(command_name.find(' ') + 1));

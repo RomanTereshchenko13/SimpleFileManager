@@ -1,12 +1,14 @@
 #include"pch.h"
 #include"file_manager.h"
 
-void file_manager::make_dir(std::string& command) {
+void file_manager::make_dir(std::string& command) 
+{
 	try
 	{
 		if (fs::create_directory(m_file_system_ptr->get_current_path() / command))
-			cout << "Directory " << command << " created" << endl;
-		else cout << "Directory " << command << " already exist" << endl;
+			std::cout << "Directory " << command << " created" << std::endl;
+		else 
+			std::cout << "Directory " << command << " already exist" << std::endl;
 	}
     catch (const fs::filesystem_error& ex)
     {
@@ -14,33 +16,40 @@ void file_manager::make_dir(std::string& command) {
     }
 }
 
-void file_manager::remove_dir(const string& command) {
+void file_manager::remove_dir(const string& command) 
+{
 	fs::path path(m_file_system_ptr->get_current_path() / command);
-	if (fs::is_directory(path)) {
-		try {
+	if (fs::is_directory(path)) 
+	{
+		try 
+		{
 			fs::remove(path);
-			cout << "Directory " << command << " removed" << endl;
+			std::cout << "Directory " << command << " removed" << std::endl;
 		}
-		catch (fs::filesystem_error) {
-			cout << "Sorry, directory " << command << " can`t be removed. It`s not empty" << endl;
+		catch (fs::filesystem_error& ex) 
+		{
+			 std::cerr << ex.what() << std::endl;
 		}
 	}
 	else cout << "Can`t find directory with name " << command << endl;
 }
 
-void file_manager::remove(const std::string& command) {
+void file_manager::remove(const std::string& command) 
+{
 	fs::path path(m_file_system_ptr->get_current_path() / command);
-	if (fs::remove_all(path)) {
+	if (fs::remove_all(path)) 
+	{
 		if (fs::is_directory(path))
-			cout << "Directory " << command << " removed" << endl;
-		else cout << "File " << command << " removed" << endl;
+			std::cout << "Directory " << command << " removed" << std::endl;
+		else std::cout << "File " << command << " removed" << std::endl;
 	}
-	else cout << "Can`t find directory with name" << command << endl;
+	else 
+		std::cout << "Can`t find directory with name" << command << std::endl;
 }
 
 //move to different directory or rename
-void file_manager::move(string& command) {
-
+void file_manager::move(string& command) 
+{
 	std::vector<string> paths;
 
 	std::string s;
@@ -50,15 +59,16 @@ void file_manager::move(string& command) {
 	while (getline(ss, s, delim))
 		paths.push_back(s);
 
-	if (paths.size() == 2) {
-
+	if (paths.size() == 2) 
+	{
 		fs::rename(m_file_system_ptr->get_current_path() / paths[0], m_file_system_ptr->get_current_path() / paths[1]);
 	}
- 
-	else cout << "Please enter second name or path" << endl;
+	else 
+		std::cout << "Please enter second name or path" << std::endl;
 }
 
-void file_manager::copy(string& command) {
+void file_manager::copy(string& command) 
+{
 	std::vector<string> paths;
 	string temp = command;
 	string s;
@@ -68,24 +78,25 @@ void file_manager::copy(string& command) {
 		paths.push_back(s);
 	if (paths.size() == 2) {
 		fs::copy(m_file_system_ptr->get_current_path() / paths[0], m_file_system_ptr->get_current_path() / paths[1]);
-		cout << "Directory/File: " << paths[0] << " copied" << endl;
+		std::cout << "Directory/File: " << paths[0] << " copied" << std::endl;
 	}
-	else cout << "Please enter second path" << endl;
+	else std::cout << "Please enter second path" << std::endl;
 }
 
 void file_manager::list()
 {
-	cout << "\nDirectory content: " << endl;
+	std::cout << "\nDirectory content: " << std::endl;
 	for (fs::directory_entry dir : fs::directory_iterator(m_file_system_ptr->get_current_path(), fs::directory_options::skip_permission_denied))
-		cout << dir.path() << endl;
+		std::cout << dir.path() << std::endl;
 }
 
 void file_manager::create_file(std::string& command)
 {
 	fs::path path(m_file_system_ptr->get_current_path() / command);
 	if (fs::exists(path))
-		cout << "File " << command << " already exists" << endl;
-	else {
+		std::cout << "File " << command << " already exists" << std::endl;
+	else 
+	{
 		std::ofstream file(command);
 		file.close();
 	}

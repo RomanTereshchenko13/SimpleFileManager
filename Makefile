@@ -27,8 +27,7 @@ $(TARGET): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(PCH_FLAGS) -o $@ $(OBJECTS)
 
 # Build object files
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
-	@mkdir -p $(@D)
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) $(PCH_FLAGS) -I$(INCDIR) -c $< -o $@
 
 #Create build directory
