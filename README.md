@@ -107,7 +107,7 @@ To print the contents of a file, use the following command:
 
 To write to a file, use the following command:
 
-    echo "<content>" > <file_name>
+    write "<content>" > <file_name>
 
 ## 4. Contributing<a name="contributing"></a>
 
