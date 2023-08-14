@@ -1,7 +1,6 @@
 #include"pch.h"
 #include "command.h"
 #include"color.h"
-#include<conio.h>
 
 using system_ptr = std::shared_ptr<file_system>;
 using manager_ptr = std::shared_ptr<file_manager>;
@@ -41,16 +40,16 @@ void run_file_manager(const commands_map& commands, const system_ptr& file_syste
     {
         cout << COLOR::Yellow << file_system_ptr->get_current_path().string() << "> " << COLOR::Reset;
         getline(std::cin, command_name);
-        if(command_name == "\x1b[A")
-            std::cout << "Up arrow key pressed" << std::endl;
         auto it = commands.find(command_name.substr(0, command_name.find(' ')));
         if (it != commands.end()) {
             it->second->execute(command_name.substr(command_name.find(' ') + 1));
         }
-        else if(command_name == "Q" || command_name == "q") {
+        else if(command_name == "Q" || command_name == "q") 
+        {
             std::cout << "Bye!\n";
         }
-        else {
+        else 
+        {
             cout << "Invalid command." << endl;
         }
     } while (command_name != "Q" && command_name != "q");

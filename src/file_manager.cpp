@@ -1,21 +1,24 @@
 #include"pch.h"
+#include"color.h"
 #include"file_manager.h"
 
+//creates directory in a current path
 void file_manager::make_dir(std::string& command) 
 {
 	try
 	{
 		if (fs::create_directory(m_file_system_ptr->get_current_path() / command))
-			std::cout << "Directory " << command << " created" << std::endl;
+			std::cout << "Directory " << COLOR::Green << command << COLOR::Reset << " created\n";
 		else 
-			std::cout << "Directory " << command << " already exist" << std::endl;
+			std::cout << "Directory " << COLOR::Yellow << command << COLOR::Reset << " already exist\n";
 	}
     catch (const fs::filesystem_error& ex)
     {
-        std::cerr << "Error occurred: " << ex.what() << std::endl;
+        std::cerr << COLOR::Red << ex.what() << COLOR::Reset << std::endl;
     }
 }
 
+//removes directory in a cyrrent path if it is empty
 void file_manager::remove_dir(const string& command) 
 {
 	fs::path path(m_file_system_ptr->get_current_path() / command);
@@ -24,34 +27,31 @@ void file_manager::remove_dir(const string& command)
 		try 
 		{
 			fs::remove(path);
-			std::cout << "Directory " << command << " removed" << std::endl;
+			std::cout << "Directory " << COLOR::Green << command << COLOR::Reset << " removed\n";
 		}
-		catch (fs::filesystem_error& ex) 
+		catch (const fs::filesystem_error& ex) 
 		{
-			 std::cerr << ex.what() << std::endl;
+        std::cerr << COLOR::Red << ex.what() << COLOR::Reset << std::endl;
 		}
 	}
-	else cout << "Can`t find directory with name " << command << endl;
+	else std::cout << "Can`t find directory with name " << COLOR::Yellow << command << COLOR::Reset << std::endl;
 }
 
+//remove file or directory
 void file_manager::remove(const std::string& command) 
 {
-	fs::path path(m_file_system_ptr->get_current_path() / command);
-	if (fs::remove_all(path)) 
+	if (fs::remove_all(m_file_system_ptr->get_current_path() / command)) 
 	{
-		if (fs::is_directory(path))
-			std::cout << "Directory " << command << " removed" << std::endl;
-		else std::cout << "File " << command << " removed" << std::endl;
+		std::cout << COLOR::Green << command << COLOR::Reset << " removed\n";
 	}
 	else 
-		std::cout << "Can`t find directory with name" << command << std::endl;
+		std::cout << "Can`t find directory with name " << COLOR::Yellow << command << COLOR::Reset << std::endl;
 }
 
 //move to different directory or rename
 void file_manager::move(string& command) 
 {
 	std::vector<string> paths;
-
 	std::string s;
 	const char delim = ' ';
 	std::stringstream ss(command);
@@ -61,26 +61,34 @@ void file_manager::move(string& command)
 
 	if (paths.size() == 2) 
 	{
-		fs::rename(m_file_system_ptr->get_current_path() / paths[0], m_file_system_ptr->get_current_path() / paths[1]);
+		try
+		{
+			fs::rename(m_file_system_ptr->get_current_path() / paths[0], m_file_system_ptr->get_current_path() / paths[1]);
+			std::cout << COLOR::Green << paths[0] << COLOR::Reset << " moved to: " << COLOR::Green << paths[1] << COLOR::Reset << std::endl;
+		}
+		catch(const fs::filesystem_error& ex)
+		{
+			std::cerr << COLOR::Red << ex.what() << COLOR::Reset << std::endl;
+		}
 	}
 	else 
-		std::cout << "Please enter second name or path" << std::endl;
+		std::cout << COLOR::Red << "Please enter second name or path\n" << COLOR::Reset;
 }
 
 void file_manager::copy(string& command) 
 {
 	std::vector<string> paths;
-	string temp = command;
 	string s;
 	const char delim = ' ';
-	std::stringstream ss(temp);
+	std::stringstream ss(command);
 	while (getline(ss, s, delim))
 		paths.push_back(s);
 	if (paths.size() == 2) {
 		fs::copy(m_file_system_ptr->get_current_path() / paths[0], m_file_system_ptr->get_current_path() / paths[1]);
-		std::cout << "Directory/File: " << paths[0] << " copied" << std::endl;
+		std::cout << COLOR::Green << paths[0] << COLOR::Reset << " copied to: " << COLOR::Green << paths[1] << COLOR::Reset << std::endl;
 	}
-	else std::cout << "Please enter second path" << std::endl;
+	else
+		std::cout << COLOR::Red << "Please enter second name or path\n" << COLOR::Reset;
 }
 
 void file_manager::list()
@@ -94,11 +102,19 @@ void file_manager::create_file(std::string& command)
 {
 	fs::path path(m_file_system_ptr->get_current_path() / command);
 	if (fs::exists(path))
-		std::cout << "File " << command << " already exists" << std::endl;
+		std::cout << "File " << COLOR::Yellow << command << COLOR::Reset << " already exists\n";
 	else 
 	{
-		std::ofstream file(command);
-		file.close();
+		try
+		{
+			std::ofstream file(path);
+			std::cout << "File " << COLOR::Green << command << COLOR::Reset << " created\n";
+			file.close();
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
 	}
 }
 
@@ -111,7 +127,7 @@ void file_manager::read_from_file(std::string& command)
 
 	if (!file.is_open())
 	{
-		std::cerr << "Failed to open " << m_file_path << std::endl;
+		std::cerr << "Failed to open " << COLOR::Red << m_file_path << COLOR::Reset << std::endl;
 	}
 
 	std::string line;
@@ -122,7 +138,6 @@ void file_manager::read_from_file(std::string& command)
 	}
 
 	file.close();
-
 }
 
 //create file and write to it. if file already exist appends new content to already existed
@@ -134,11 +149,11 @@ void file_manager::write_to_file(std::string& command)
 
 	if (!file.is_open())
 	{
-		std::cerr << "Failed to open " << m_file_path << std::endl;
+		std::cerr << "Failed to open " << COLOR::Red << m_file_path << COLOR::Reset << std::endl;
 		return;
 	}
 
-	cout << "Please write your text (type 'exit' to finish): " << endl;
+	std::cout << "Please write your text (type 'exit' to finish): \n";
 
 	std::string input;
 	while(true) 

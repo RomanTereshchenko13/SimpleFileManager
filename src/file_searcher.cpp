@@ -1,4 +1,5 @@
 #include"pch.h"
+#include"color.h"
 #include "file_searcher.h"
 
 void file_searcher::start_search(std::string_view file_name)
@@ -15,8 +16,8 @@ void file_searcher::start_search(std::string_view file_name)
 		else if (entry.is_regular_file() && entry.path().filename() == file_name)
 		{   
             found = true;
-            std::cout << "Full path to the file: " << entry.path().string() << std::endl;
-			return;
+            std::cout << "Full path to the file: " << COLOR::Green << entry.path().string() << COLOR::Reset << std::endl;
+			return; 
 		}
 	}
 
@@ -32,7 +33,7 @@ void file_searcher::start_search(std::string_view file_name)
     }
 
     if(!found)
-        std::cout << "Can`t find file: " << file_name << std::endl;
+        std::cout << "Can`t find file: " << COLOR::Red << file_name << COLOR::Reset << std::endl;
 }
 
 bool file_searcher::search_file(const fs::path& path, std::string_view file_name)
@@ -45,7 +46,7 @@ bool file_searcher::search_file(const fs::path& path, std::string_view file_name
                 found = true;
             }
             
-            std::cout << "Full path to the file: " << entry.path().string() << std::endl;
+            std::cout << "Full path to the file: " << COLOR::Green << entry.path().string() << COLOR::Reset << std::endl;
         }
         if(found) return true;
     }
@@ -76,7 +77,7 @@ void file_searcher::worker_thread(std::string_view file_name)
         }
         catch (const fs::filesystem_error& ex)
         {
-            std::cerr << "Error occurred: " << ex.what() << std::endl;
+            std::cerr << COLOR::Red << ex.what() << COLOR::Reset << std::endl;
         }
 
         if (found) return;

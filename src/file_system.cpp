@@ -26,7 +26,7 @@ void file_system::set_current_path(const std::string& command) {
 		m_current_path = fs::current_path();
 	}
 	catch (fs::filesystem_error const& ex) {
-		std::cerr << ex.what() << std::endl;
+		std::cerr << COLOR::Red << ex.what() << COLOR::Reset << std::endl;
 	}
 
 }
