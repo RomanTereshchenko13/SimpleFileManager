@@ -6,11 +6,11 @@ The Simple C++ File Manager App is a command-line tool designed to provide basic
 
 ## 2. Installation<a name="installation"></a>
 
-To use the Simple C++ File Manager App, follow these steps:
+### To use the Simple C++ File Manager App, follow these steps:
 
-    Clone the GitHub repository:
+Clone the GitHub repository:
 
-git clone https://github.com/your-username/simple-file-manager.git
+    git clone https://github.com/your-username/simple-file-manager.git
 
 Navigate to the project directory:
 
