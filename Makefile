@@ -19,6 +19,16 @@ OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))
 # Binary name
 TARGET = file_manager
 
+# Determine the operating system
+ifeq ($(OS),Windows_NT)
+    RM = del /Q
+    MKDIR = mkdir
+else
+    RM = rm -f
+    MKDIR = mkdir -p
+endif
+
+
 # Rules
 all: $(TARGET)
 
@@ -32,7 +42,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 
 #Create build directory
 $(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+	$(MKDIR) $(BUILDDIR)
 
 clean:
-	rm -rf $(BUILDDIR) $(TARGET)
+	$(RM) $(OBJECTS) $(TARGET)
