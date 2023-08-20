@@ -44,4 +44,4 @@ $(BUILDDIR):
 
 clean:
 	$(RM) $(subst /,\,$(OBJECTS)) $(subst /,\,$(TARGET))
-	$(RM) $(BUILDDIR)
+	$(RM) -r $(subst /,\,$(BUILDDIR))
