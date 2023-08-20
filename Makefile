@@ -16,18 +16,16 @@ SOURCES = $(wildcard $(SRCDIR)/*.cpp)
 HEADERS = $(wildcard $(INCDIR)/*.h)
 OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SOURCES))
 
-# Binary name
-TARGET = file_manager
-
 # Determine the operating system
 ifeq ($(OS),Windows_NT)
     RM = del /Q
     MKDIR = mkdir
+	TARGET = file_manager.exe
 else
     RM = rm -f
     MKDIR = mkdir -p
+	TARGET = file_manager
 endif
-
 
 # Rules
 all: $(TARGET)
@@ -45,4 +43,5 @@ $(BUILDDIR):
 	$(MKDIR) $(BUILDDIR)
 
 clean:
-	$(RM) $(OBJECTS) $(TARGET)
+	$(RM) $(subst /,\,$(OBJECTS)) $(subst /,\,$(TARGET))
+	$(RM) $(BUILDDIR)
