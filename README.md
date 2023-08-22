@@ -1,5 +1,4 @@
-# Simple C++ File Manager Documentation
-
+# Simple C++ File Manager
 ## 1. Introduction<a name="introduction"></a>
 
 The Simple C++ File Manager App is a command-line tool designed to provide basic file and directory management functionalities. Users can interact with the application to create directories, files, manage file contents, move/rename, copy, and remove directories/files, and navigate through the file system.
