@@ -104,6 +104,6 @@ Contributions to this project are welcome! To contribute, follow these steps:
 
 The Simple C++ File Manager App is released under the MIT License.
 
-This documentation provides an overview of the basic functionalities of the Simple C++ File Manager App. For more detailed information and examples, refer to the source code and comments in the GitHub repository.
+This documentation provides an overview of the basic functionalities of the Simple C++ File Manager App.
 
 GitHub Repository: https://github.com/your-username/simple-file-manager
